@@ -1,0 +1,5 @@
+package com.fitin.shopping.controller;
+
+public class ProductController {
+
+}

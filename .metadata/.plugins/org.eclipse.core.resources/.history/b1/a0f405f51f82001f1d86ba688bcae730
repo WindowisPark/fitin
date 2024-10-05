@@ -1,0 +1,26 @@
+package com.fitin.auth.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.fitin.auth.dto.MemberCreateForm;
+import com.fitin.auth.service.MemberService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+@RequestMapping
+public class MemberController {
+
+		private final MemberService memberService;
+		
+		@GetMapping("/signup")
+		public String signup(MemberCreateForm memberCreateForm) {{
+			return "signup_form";
+		}
+}

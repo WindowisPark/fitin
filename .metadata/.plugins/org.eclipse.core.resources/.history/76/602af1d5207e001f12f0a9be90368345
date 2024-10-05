@@ -1,0 +1,5 @@
+package com.fitin.dto;
+
+public class UserDto {
+
+}

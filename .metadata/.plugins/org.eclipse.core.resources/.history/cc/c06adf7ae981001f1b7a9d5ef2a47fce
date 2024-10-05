@@ -1,0 +1,8 @@
+package com.fitin.shopping.exception;
+
+public class OrderNotFoundException {
+	public OrderNotFoundException(String message) {
+	    super();
+	}
+
+}

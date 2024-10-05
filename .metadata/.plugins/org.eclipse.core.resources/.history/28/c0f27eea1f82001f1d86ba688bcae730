@@ -1,0 +1,5 @@
+package com.fitin.auth.controller;
+
+public class MemberController {
+
+}

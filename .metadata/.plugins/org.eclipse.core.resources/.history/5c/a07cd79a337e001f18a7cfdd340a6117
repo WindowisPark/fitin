@@ -1,0 +1,5 @@
+package com.fitin.controller;
+
+public class HomeController {
+
+}

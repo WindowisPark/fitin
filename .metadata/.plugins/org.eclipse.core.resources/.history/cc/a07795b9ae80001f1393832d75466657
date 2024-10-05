@@ -1,0 +1,5 @@
+package com.fitin.shopping.repository;
+
+public class CartIemRepository {
+
+}

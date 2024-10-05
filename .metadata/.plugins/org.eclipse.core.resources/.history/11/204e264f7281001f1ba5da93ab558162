@@ -1,0 +1,46 @@
+package com.fitin.shopping.service;
+
+import com.fitin.shopping.dto.CartItemDto;
+import com.fitin.shopping.entity.Cart;
+import com.fitin.shopping.entity.CartItem;
+import com.fitin.shopping.entity.Product;
+import com.fitin.shopping.exception.CartNotFoundException;
+import com.fitin.shopping.exception.ProductNotFoundException;
+import com.fitin.shopping.repository.CartItemRepository;
+import com.fitin.shopping.repository.CartRepository;
+import com.fitin.shopping.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CartService {
+
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+
+    // 장바구니에 상품 추가
+    @Transactional
+    public void addToCart(CartItemDto cartItemDto) {
+        Product product = productRepository.findById(cartItemDto.getProductId())
+                .orElseThrow(() -> new ProductNotFoundException("해당 상품을 찾을 수 없습니다."));
+
+        Cart cart = getOrCreateCart();
+
+        CartItem cartItem = new CartItem(cart, product, cartItemDto.getQuantity());
+        cartItemRepository.save(cartItem);
+    }
+
+    // 장바구니 조회
+    @Transactional(readOnly = true)
+    public List<CartItemDto> getCartItems(Long cartId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("장바구니를 찾을 수 없습니다."));
+
+        return cart.getCartItems().stream()
+                .map(cartItem -> new CartItemDto(cartItem.getProduct().get

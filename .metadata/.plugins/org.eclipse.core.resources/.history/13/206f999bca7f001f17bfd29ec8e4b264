@@ -1,0 +1,26 @@
+package com.fitin.shopping.repository;
+
+import com.fitin.shopping.entity.Product;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public List<Product> findProductsByCustomCriteria(String someCriteria) {
+        // Querydsl을 이용한 동적 쿼리 작성
+        // QProduct는 Querydsl에서 자동으로 생성된 클래스 (build 시점에 생성)
+        QProduct product = QProduct.product;
+
+        return queryFactory
+                .selectFrom(product)
+                .where(product.name.containsIgnoreCase(someCriteria)
+                        .or(product.description.containsIgnoreCase(someCriteria)))
+                .fetch();
+    }
+}

@@ -1,0 +1,5 @@
+package com.fitin.config;
+
+public class SecurityConfig {
+
+}

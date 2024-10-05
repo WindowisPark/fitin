@@ -1,0 +1,39 @@
+spring.application.name=fitin
+
+# H2 콘솔 설정
+spring.h2.console.enabled=true
+
+# 데이터베이스 설정
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# JPA 및 Hibernate 설정
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.show_sql=true
+
+# 로깅 레벨 설정
+logging.level.root=INFO
+logging.level.org.springframework.web=DEBUG
+logging.level.com.fitin=DEBUG  # 프로젝트 패키지에 맞춰 변경
+
+# 콘솔에 컬러 출력 활성화 (optional)
+spring.output.ansi.enabled=ALWAYS
+
+# SQL 쿼리 로그 표시 (JPA 사용 시)
+spring.jpa.show-sql=true
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# HikariCP 로그 활성화 (DB connection pool 관리)
+logging.level.com.zaxxer.hikari=DEBUG
+
+# HTTP 요청/응답 로깅
+logging.level.org.springframework.security=DEBUG
+
+# JWT 설정
+jwt.secret=c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK
+

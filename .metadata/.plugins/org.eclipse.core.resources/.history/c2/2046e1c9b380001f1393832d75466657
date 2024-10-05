@@ -1,0 +1,35 @@
+package com.fitin.shopping.service;
+
+import com.fitin.shopping.entity.Review;
+import com.fitin.shopping.repository.ReviewRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class ReviewService {
+
+    private final ReviewRepository reviewRepository;
+
+    // 특정 상품에 대한 리뷰 목록 조회
+    public List<Review> getReviewsByProductId(Long productId) {
+        return reviewRepository.findReviewsByProductId(productId);
+    }
+
+    // 특정 사용자가 작성한 리뷰 목록 조회
+    public List<Review> getReviewsByUserId(Long userId) {
+        return reviewRepository.findReviewsByUserId(userId);
+    }
+
+    // 리뷰 삭제
+    public void deleteReview(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
+
+    // 리뷰 저장
+    public Review saveReview(Review review) {
+        return reviewRepository.save(review);
+    }
+}

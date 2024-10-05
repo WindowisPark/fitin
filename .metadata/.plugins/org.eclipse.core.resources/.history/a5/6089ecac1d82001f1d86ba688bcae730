@@ -1,0 +1,28 @@
+package com.fitin.auth.service;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.fitin.auth.repository.MemberRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+
+
+
+public class MemberService {
+	
+	private final MemberRepository memberRepository;
+	
+	public SiteMember create(String membername, String email, String password) {
+		SiteMember member = new SiteMember();
+		member.setMembername(membername);
+		member.setEmail(email);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		member.setPassword(passwordEncoder.encode(password));
+		this.memberRepository.save(member);
+		return member;
+	}
+}

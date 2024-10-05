@@ -1,0 +1,84 @@
+package com.fitin.shopping.service;
+
+import com.fitin.shopping.dto.OrderCreateDto;
+import com.fitin.shopping.dto.OrderHistoryDto;
+import com.fitin.shopping.dto.OrderItemDto;
+import com.fitin.shopping.dto.OrderResponseDto;
+import com.fitin.shopping.entity.Order;
+import com.fitin.shopping.entity.OrderItem;
+import com.fitin.shopping.entity.Product;
+import com.fitin.shopping.exception.OrderNotFoundException;
+import com.fitin.shopping.exception.ProductNotFoundException;
+import com.fitin.shopping.repository.OrderItemRepository;
+import com.fitin.shopping.repository.OrderRepository;
+import com.fitin.shopping.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final ProductRepository productRepository;
+
+    @Transactional
+    public OrderResponseDto createOrder(OrderCreateDto orderCreateDto) {
+        Order order = new Order();
+        orderRepository.save(order);
+
+        for (OrderItemDto orderItemDto : orderCreateDto.getOrderItems()) {
+            // Product 를 찾아서 추가
+            Product product = productRepository.findById(orderItemDto.getProductId())
+                    .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+
+            // OrderItem 생성자 수정
+            OrderItem orderItem = new OrderItem(order, product, itemDto.getQuantity());
+            orderItemRepository.save(orderItem);  // orderItem 저장
+            order.addOrderItem(orderItem);
+        }
+
+        return new OrderResponseDto(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderHistoryDto> getOrderHistory(Long userId) {
+        List<Order> orders = orderRepository.findOrdersByUserId(userId);
+
+        return orders.stream()
+                .map(order -> new OrderHistoryDto(order))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public OrderResponseDto getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
+
+        return new OrderResponseDto(order);
+    }
+
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(OrderNotFoundException::new);
+
+        order.setStatus("CANCELLED");
+        orderRepository.save(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderResponseDto> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+
+        return orders.stream()
+                .map(order -> new OrderResponseDto(order))
+                .collect(Collectors.toList());
+    }
+}

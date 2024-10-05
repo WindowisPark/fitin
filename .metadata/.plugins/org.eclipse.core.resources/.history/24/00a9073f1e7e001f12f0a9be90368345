@@ -1,0 +1,31 @@
+package com.fitin.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+@Configuration
+public class CorsConfig {
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        
+        // 특정 Origin 허용
+        config.addAllowedOriginPattern("*");
+        
+        config.addAllowedHeader("*");  // 모든 헤더 허용
+        config.addAllowedMethod("*");  // 모든 메서드 허용
+        
+        // 필요한 경우 헤더 노출 추가 (예: Authorization 헤더 노출)
+        config.addExposedHeader("Authorization");
+
+       
+        source.registerCorsConfiguration("/api/**", config);
+        return new CorsFilter(source);
+    }
+}

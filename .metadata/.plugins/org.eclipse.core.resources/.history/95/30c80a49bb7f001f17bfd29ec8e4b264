@@ -1,0 +1,5 @@
+package com.fitin.shopping.dto;
+
+public class OrderCreateDto {
+
+}
