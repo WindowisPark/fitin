@@ -1,5 +1,0 @@
-package com.fitin.auth.dto;
-
-public class MemberCreateForm {
-
-}

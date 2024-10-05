@@ -1,8 +1,0 @@
-package com.fitin.shopping.repository;
-
-import com.fitin.shopping.entity.Order;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface OrderItemRepository extends JpaRepository<Order, Long> {
-    // 필요에 따라 추가적인 메서드 정의 가능
-}

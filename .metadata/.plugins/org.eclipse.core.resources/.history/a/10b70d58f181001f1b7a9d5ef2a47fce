@@ -1,8 +1,0 @@
-package com.fitin.shopping.exception;
-
-public class OrderNotFoundException {
-	public OrderNotFoundException(String message) {
-	    super(); //gpt에선 message를 input
-	}
-
-}

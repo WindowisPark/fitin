@@ -1,5 +1,0 @@
-package com.fitin.shopping.repository;
-
-public interface CartItemRepository extends JpaRepository<CartItem, Long> {
-    // 필요한 쿼리 메서드가 추가될 수 있음
-}

@@ -1,5 +1,0 @@
-package com.fitin.auth.repository;
-
-public class MemberRepository {
-
-}

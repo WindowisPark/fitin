@@ -1,5 +1,0 @@
-package com.fitin.shopping.exception;
-
-public class ReviewNotFoundException {
-
-}
