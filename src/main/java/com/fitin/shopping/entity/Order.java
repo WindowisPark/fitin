@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fitin.auth.entity.Member;
+import com.fitin.shopping.util.PaymentMethod;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,15 +20,24 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Setter
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+    
+    private String shippingAddress;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -41,7 +53,7 @@ public class Order {
 
     // 연관된 orderItems 추가
     public void addOrderItem(OrderItem orderItem) {
-        this.orderItems.add(orderItem);
+        orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
 

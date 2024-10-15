@@ -2,11 +2,11 @@ package com.fitin.shopping.dto;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import com.fitin.shopping.entity.OrderItem;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public class OrderItemDto {
 
@@ -52,5 +52,13 @@ public class OrderItemDto {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+    
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

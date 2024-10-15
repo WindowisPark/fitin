@@ -3,6 +3,7 @@ package com.fitin.shopping.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fitin.shopping.util.PaymentMethod;
 
 @Entity
 @Table(name = "payments")
@@ -15,8 +16,8 @@ public class Payment {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Column(nullable = false)
-    private String paymentMethod; // 결제 방법 (예: 카드, 계좌이체 등)
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(nullable = false)
     private LocalDateTime paymentDate;
@@ -31,7 +32,7 @@ public class Payment {
     }
 
     // 생성자
-    public Payment(BigDecimal amount, String paymentMethod, Order order) {
+    public Payment(BigDecimal amount, PaymentMethod paymentMethod, Order order) {
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.order = order;
@@ -47,7 +48,7 @@ public class Payment {
         return amount;
     }
 
-    public String getPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 

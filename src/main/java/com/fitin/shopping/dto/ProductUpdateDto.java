@@ -1,10 +1,9 @@
 package com.fitin.shopping.dto;
 
-import javax.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductUpdateDto {
 

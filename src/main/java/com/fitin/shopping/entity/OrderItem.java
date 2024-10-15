@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "order_items")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -51,6 +52,12 @@ public class OrderItem {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
+    }
+    public OrderItem(Order order, Product product, Integer quantity, BigDecimal price) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     public Product getProduct() {

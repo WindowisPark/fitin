@@ -1,10 +1,12 @@
 package com.fitin.shopping.dto;
 
+import java.math.BigDecimal;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -16,7 +18,8 @@ public class ProductCreateDto {
     @NotBlank(message = "상품 설명을 입력해 주세요.")
     private String description;
 
-    @NotNull(message = "가격을 입력해 주세요.")
+    @NotNull(message = "Price cannot be null")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Price must be positive")
     private BigDecimal price;
 
     @NotNull(message = "재고 수량을 입력해 주세요.")

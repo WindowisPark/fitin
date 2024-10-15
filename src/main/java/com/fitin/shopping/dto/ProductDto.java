@@ -5,6 +5,14 @@ import java.util.List;
 
 import com.fitin.shopping.entity.Product;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDto {
 
 	 	private Long id;
@@ -16,8 +24,17 @@ public class ProductDto {
 	    
     
 	// 기본 생성자
-	public ProductDto(Product product) {} 
+	public ProductDto() {} 
     
+	 // Product 엔티티를 받는 생성자
+    public ProductDto(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.stockQuantity = product.getStockQuantity();
+        this.imageUrl = product.getImageUrl();
+    }
 
 	public ProductDto(Long id, String name, String description, BigDecimal price, int stockQuantity, String imageUrl) {
 	    this.id = id;
@@ -38,8 +55,4 @@ public class ProductDto {
     }
 
 
-    // BigDecimal을 int로 변환하는 메서드
-    public int getPriceAsInt() {
-        return price.intValue();  // BigDecimal을 int로 변환
-    }
 }

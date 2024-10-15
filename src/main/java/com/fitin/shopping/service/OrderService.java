@@ -1,58 +1,46 @@
 package com.fitin.shopping.service;
 
-import com.fitin.shopping.dto.OrderCreateDto;
-import com.fitin.shopping.dto.OrderHistoryDto;
-import com.fitin.shopping.dto.OrderItemDto;
-import com.fitin.shopping.dto.OrderResponseDto;
-import com.fitin.shopping.entity.Order;
-import com.fitin.shopping.entity.OrderItem;
-import com.fitin.shopping.entity.Product;
-import com.fitin.shopping.exception.OrderNotFoundException;
-import com.fitin.shopping.exception.ProductNotFoundException;
-import com.fitin.shopping.repository.OrderItemRepository;
-import com.fitin.shopping.repository.OrderRepository;
-import com.fitin.shopping.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fitin.auth.entity.Member;
+import com.fitin.auth.repository.MemberRepository;
+import com.fitin.shopping.dto.OrderCreateDto;
+import com.fitin.shopping.dto.OrderHistoryDto;
+import com.fitin.shopping.dto.OrderResponseDto;
+import com.fitin.shopping.entity.Order;
+import com.fitin.shopping.exception.MemberNotFoundException;
+import com.fitin.shopping.exception.OrderNotFoundException;
+import com.fitin.shopping.repository.OrderRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;  //
 
     @Transactional
     public OrderResponseDto createOrder(OrderCreateDto orderCreateDto) {
+        Member member = memberRepository.findById(orderCreateDto.getMemberId())
+            .orElseThrow(() -> new MemberNotFoundException("Member not found with id: " + orderCreateDto.getMemberId()));
+
+
         Order order = new Order();
-        order.setStatus("NEW");
+        order.setMember(member);
+        order.setPaymentMethod(orderCreateDto.getPaymentMethod());
+        order.setShippingAddress(orderCreateDto.getShippingAddress());
 
-        // 주문 아이템 생성 및 저장
-        for (OrderItemDto itemDto : orderCreateDto.getOrderItems()) {
-            Product product = productRepository.findById(itemDto.getProductId())
-                    .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
-            
-            // 주문 아이템 생성
-            OrderItem orderItem = new OrderItem(order, product, itemDto.getQuantity());
 
-            // OrderItem을 저장
-            orderItemRepository.save(orderItem);  // OrderItem을 저장합니다.
-
-            // Order에 OrderItem을 추가합니다.
-            order.addOrderItem(orderItem);
-        }
-
-        // 최종적으로 Order를 저장합니다.
-        orderRepository.save(order);  
-
-        return new OrderResponseDto(order);
+        Order savedOrder = orderRepository.save(order);
+        return new OrderResponseDto(savedOrder);
     }
-
     @Transactional(readOnly = true)
     public List<OrderHistoryDto> getOrderHistory(Long memberId) {
         List<Order> orders = orderRepository.findByMemberId(memberId);

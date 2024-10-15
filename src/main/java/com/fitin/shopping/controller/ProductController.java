@@ -25,11 +25,10 @@ public class ProductController {
 
     // 2. 상품 상세 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") Long id) {
         ProductDto product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
-
     // 3. 상품 생성
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody ProductCreateDto productCreateDto) {
@@ -39,14 +38,16 @@ public class ProductController {
 
     // 4. 상품 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateDto productUpdateDto) {
+    public ResponseEntity<ProductDto> updateProduct(
+        @PathVariable("id") Long id, 
+        @RequestBody ProductUpdateDto productUpdateDto
+    ) {
         ProductDto updatedProduct = productService.updateProduct(id, productUpdateDto);
         return ResponseEntity.ok(updatedProduct);
     }
 
-    // 5. 상품 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

@@ -2,16 +2,19 @@ package com.fitin.shopping.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fitin.shopping.util.PaymentMethod;
 
 public class PaymentResponseDto {
 
+	
+	
     private Long paymentId;
     private BigDecimal amount;
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
     private LocalDateTime paymentDate;
     private Long orderId;
 
-    public PaymentResponseDto(Long paymentId, BigDecimal amount, String paymentMethod, LocalDateTime paymentDate, Long orderId) {
+    public PaymentResponseDto(Long paymentId, BigDecimal amount, PaymentMethod paymentMethod, LocalDateTime paymentDate, Long orderId) {
         this.paymentId = paymentId;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
@@ -28,8 +31,12 @@ public class PaymentResponseDto {
         return amount;
     }
 
-    public String getPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public String getPaymentMethodDisplayName() {
+        return paymentMethod.getDisplayName();
     }
 
     public LocalDateTime getPaymentDate() {

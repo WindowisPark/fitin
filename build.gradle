@@ -43,8 +43,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // H2 Database (로컬 테스트용 인메모리 DB)
-    runtimeOnly 'com.h2database:h2'
+	// MySQL 의존성 추가
+    implementation 'mysql:mysql-connector-java:8.0.28'
 
     // 파일 업로드를 위한 Apache Commons FileUpload
     implementation 'commons-fileupload:commons-fileupload:1.4'
@@ -58,21 +58,34 @@ dependencies {
     // 이미지 처리 관련 라이브러리 추가 (이미지 크기 조정, 변환 등을 지원)
     implementation 'org.imgscalr:imgscalr-lib:4.2'
 
-    // javax.validation (유효성 검사용)
-    implementation 'javax.validation:validation-api:2.0.1.Final'
 
     // Hibernate Validator for Bean Validation (JSR 380)
     implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 
-    // javax.persistence (JPA 관련 의존성)
-    implementation 'javax.persistence:javax.persistence-api:2.2'
+    // Spring WebSocket 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    
+    // 만약 Jackson을 사용하고 있지 않다면, JSON 처리를 위해 추가
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    implementation 'jakarta.validation:jakarta.validation-api'
+    
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // 테스트 관련 라이브러리
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    
+    
 }
+
+
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-parameters']
 }

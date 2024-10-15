@@ -23,10 +23,10 @@ public class PaymentService {
             .orElseThrow(() -> new RuntimeException("Order not found"));
         
         Payment payment = new Payment(
-            paymentCreateDto.getAmount(),
-            paymentCreateDto.getPaymentMethod(),
-            order
-        );
+                paymentCreateDto.getAmount(),
+                paymentCreateDto.getPaymentMethod(), 
+                order
+            );
         
         paymentRepository.save(payment);
         

@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +45,9 @@ public class ProductService {
     @Transactional
     public ProductDto createProduct(ProductCreateDto productCreateDto) {
         Product product = new Product(productCreateDto);
+        product.setPrice(productCreateDto.getPrice() != null ? productCreateDto.getPrice() : BigDecimal.ZERO);
         Product savedProduct = productRepository.save(product);
-        return new ProductDto(savedProduct);
+        return convertToProductDto(savedProduct);  // convertToProductDto 메서드 사용
     }
     // 4. 상품 수정
     @Transactional
@@ -54,7 +56,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다. ID: " + id));
         product.updateProduct(productUpdateDto);
         Product updatedProduct = productRepository.save(product);
-        return new ProductDto(updatedProduct);
+        return convertToProductDto(updatedProduct);  // convertToProductDto 메서드 사용
     }
 
     // 5. 상품 삭제
