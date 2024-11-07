@@ -21,6 +21,11 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
+    // member setter 추가
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
     // 카트에 아이템 추가
     public void addCartItem(CartItem cartItem) {
         this.cartItems.add(cartItem);
@@ -38,6 +43,8 @@ public class Cart {
     public List<CartItem> getCartItems() {
         return cartItems;
     }
-    
+    public Member getMember() {
+        return member;
+    }
     
 }

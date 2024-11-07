@@ -21,14 +21,15 @@ public class OrderResponseDto {
     public OrderResponseDto() {
     }
 
-    // Order 객체를 받아서 필드를 초기화하는 생성자
     public OrderResponseDto(Order order) {
         this.orderId = order.getId();
         this.orderDate = order.getOrderDate();
-        this.orderStatus = order.getStatus();  // 수정된 부분
+        this.orderStatus = order.getStatus();
+        this.paymentMethod = order.getPaymentMethod().toString();  // PaymentMethod enum을 String으로 변환
+        this.shippingAddress = order.getShippingAddress();
         this.orderItems = order.getOrderItems().stream()
-                               .map(OrderItemDto::new)  // OrderItem을 OrderItemDto로 변환
-                               .collect(Collectors.toList());
+                              .map(OrderItemDto::new)
+                              .collect(Collectors.toList());
     }
 
     // 필드 값을 직접 받는 생성자

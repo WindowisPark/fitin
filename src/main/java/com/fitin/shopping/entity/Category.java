@@ -31,4 +31,5 @@ public class Category {
     @ManyToMany(mappedBy = "categories")
     @JsonBackReference
     private List<Product> products = new ArrayList<>();
+    
 }

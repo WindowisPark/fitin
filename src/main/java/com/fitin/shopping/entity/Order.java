@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fitin.auth.entity.Member;
+import com.fitin.profile.entity.Profile;
 import com.fitin.shopping.util.PaymentMethod;
 
 import jakarta.persistence.CascadeType;
@@ -12,7 +13,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,12 +33,16 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     
     private String shippingAddress;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
     

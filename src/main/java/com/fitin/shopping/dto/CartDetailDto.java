@@ -1,52 +1,42 @@
 package com.fitin.shopping.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CartDetailDto {
+    private Long cartId;
+    private List<CartItemInfo> items;
+    private BigDecimal totalAmount;
 
-    private Long id;           // CartItem의 ID
-    private String productName; // Product 이름
-    private Integer quantity;  // CartItem의 수량
-    private BigDecimal price;      // Product 가격
-
-    // 생성자
-    public CartDetailDto(Long id, String productName, Integer quantity, BigDecimal price) {
-        this.id = id;
-        this.productName = productName;
-        this.quantity = quantity;
-        this.price = price;
+    public CartDetailDto(Long cartId, List<CartItemInfo> items, BigDecimal totalAmount) {
+        this.cartId = cartId;
+        this.items = items;
+        this.totalAmount = totalAmount;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    // Getters
+    public Long getCartId() { return cartId; }
+    public List<CartItemInfo> getItems() { return items; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+
+    public static class CartItemInfo {
+        private Long id;
+        private String productName;
+        private Integer quantity;
+        private BigDecimal price;
+
+        public CartItemInfo(Long id, String productName, Integer quantity, BigDecimal price) {
+            this.id = id;
+            this.productName = productName;
+            this.quantity = quantity;
+            this.price = price;
+        }
+        // Getters
+        public Long getId() { return id; }
+        public String getProductName() { return productName; }
+        public Integer getQuantity() { return quantity; }
+        public BigDecimal getPrice() { return price; }
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }

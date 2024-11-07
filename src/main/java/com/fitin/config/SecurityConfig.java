@@ -1,8 +1,7 @@
 package com.fitin.config;
 
-import com.fitin.auth.util.CustomAuthenticationProvider;
-import com.fitin.auth.util.JwtAuthenticationFilter;
-import com.fitin.auth.util.JwtTokenProvider;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,23 +19,34 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fitin.auth.service.CustomUserDetailsService;
+import com.fitin.auth.util.CustomAuthenticationProvider;
+import com.fitin.auth.util.JwtAuthenticationFilter;
+import com.fitin.auth.util.JwtTokenProvider;
+
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final CustomAuthenticationProvider authProvider;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private CustomAuthenticationProvider authProvider;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-
+   
+    public SecurityConfig(CustomAuthenticationProvider authProvider, 
+                          JwtTokenProvider jwtTokenProvider, 
+                          CustomUserDetailsService customUserDetailsService) {
+        this.authProvider = authProvider;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.customUserDetailsService = customUserDetailsService;
+    }
+    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
+    
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,6 +55,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .headers(headers -> headers.frameOptions().sameOrigin())
             .authorizeHttpRequests(auth -> auth
+            	.requestMatchers("/api/profiles/**").authenticated()  // 프로필 관련 모든 요청에 인증 요구
                 .requestMatchers("/h2-console/**", "/auth/**", "/api/**", "/error").permitAll()
                 .anyRequest().authenticated()
             )
@@ -57,7 +68,7 @@ public class SecurityConfig {
                 .accessDeniedHandler((request, response, accessDeniedException) ->
                     response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied"))
             )
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -77,6 +88,11 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenProvider, customUserDetailsService);
     }
 
     @Autowired

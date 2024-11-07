@@ -1,8 +1,14 @@
 package com.fitin.auth.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -33,7 +39,7 @@ public class MemberController {
     private final PasswordResetService passwordResetService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    
+    private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
     
     public MemberController(MemberService memberService, 
                             PasswordResetService passwordResetService,
@@ -83,14 +89,26 @@ public class MemberController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        logger.info("Login attempt for user: {}", loginRequest.getEmail());
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
             );
             String token = jwtTokenProvider.generateToken(authentication);
+            logger.info("Login successful for user: {}", loginRequest.getEmail());
             return ResponseEntity.ok(new LoginResponse("로그인 성공", token));
+        } catch (BadCredentialsException e) {
+            logger.warn("Login failed for user: {}. Reason: Bad credentials", loginRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인증 실패");
+        } catch (LockedException e) {
+            logger.warn("Login failed for user: {}. Reason: Account locked", loginRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("계정이 잠겼습니다");
+        } catch (DisabledException e) {
+            logger.warn("Login failed for user: {}. Reason: Account disabled", loginRequest.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("계정이 비활성화되었습니다");
         } catch (AuthenticationException e) {
-            return ResponseEntity.badRequest().body("Invalid email or password");
+            logger.error("Login failed for user: {}. Reason: {}", loginRequest.getEmail(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         }
     }
     

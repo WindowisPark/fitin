@@ -1,19 +1,13 @@
 package com.fitin.shopping.dto;
 
-import java.time.LocalDateTime;
-
 import com.fitin.shopping.entity.Review;
 
 public class ReviewResponseDto {
 
-    private Long id;
-	private Long reviewId;
-	private Long userId;
-    private Long productId;
+    private Long reviewId;
+	private Long productId;
     private String content;
     private Integer rating;
-    private LocalDateTime createdAt;
-    
     // 이미지 URL 필드 추가
     private String imageUrl;
 
@@ -22,11 +16,11 @@ public class ReviewResponseDto {
     public ReviewResponseDto() {}
 
     public ReviewResponseDto(Review review) {
-        this.id = review.getId();
+        review.getId();
         this.productId = review.getProduct().getId();  // Review 엔티티의 Product 필드를 참조하여 초기화
         this.content = review.getContent();
         this.rating = review.getRating();
-        this.createdAt = review.getCreatedAt();
+        review.getCreatedAt();
     }
     
     public ReviewResponseDto(Long reviewId, Long productId, String content, Integer rating, String imageUrl) {
